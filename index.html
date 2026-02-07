@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- Cache control -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>pls don’t panic 💘</title>
+
+  <style>
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background: linear-gradient(135deg, #ffd6e8, #ffeef5);
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      text-align: center;
+      min-height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-top: 18vh;
+      font-size: clamp(32px, 8vw, 40px);
+      line-height: 1.2;
+    }
+
+    p {
+      font-size: clamp(20px, 5vw, 24px);
+      line-height: 1.4;
+      margin-bottom: 40px;
+      padding: 0 16px;
+    }
+
+    /* Button wrapper — locked layout */
+    .btn-group {
+      position: relative;
+      width: 260px;
+      height: 80px;
+    }
+
+    button {
+      position: absolute;
+      top: 0;
+      width: 120px;
+      height: 60px;
+      font-size: 18px;
+      border: none;
+      border-radius: 32px;
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(.34,1.56,.64,1); /* bouncy */
+    }
+
+    #yes {
+      left: 0;
+      background: #ff4d88;
+      color: white;
+      transform-origin: center;
+    }
+
+    #no {
+      right: 0;
+      background: #aaa;
+      color: white;
+    }
+
+    #gif {
+      display: none;
+      width: 240px;
+      margin-top: 32px;
+      animation: pop 0.6s ease forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0); }
+      100% { transform: scale(1); }
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      font-size: 22px;
+      animation: floatUp 4s linear forwards;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1.4);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        margin-top: 15vh;
+      }
+
+      #gif {
+        width: 220px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🚨 very important question 🚨</h1>
+  <p>will you be my valentine? 💘</p>
+
+  <div class="btn-group">
+    <button id="yes">yes 😌</button>
+    <button id="no">no 🥺</button>
+  </div>
+
+  <img id="gif" src="yay.gif" alt="celebration gif">
+
+  <script>
+    let heartInterval = null;
+    let yesClicks = 0;
+    let noEscaped = false;
+    const MAX_CLICKS = 10;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const yesBtn = document.getElementById("yes");
+      const noBtn = document.getElementById("no");
+      const gif = document.getElementById("gif");
+
+      // YES button — eased growth
+      yesBtn.addEventListener("click", () => {
+        yesClicks = Math.min(yesClicks + 1, MAX_CLICKS);
+
+        const progress = yesClicks / MAX_CLICKS;   // 0 → 1
+        const eased = Math.pow(progress, 2);       // ease-in
+        const scale = 1 + eased;                   // 1 → 2
+
+        yesBtn.style.transform = `scale(${scale})`;
+
+        document.body.style.background = "#ffb3d9";
+        document.querySelector("h1").innerText = "YAYYY 💘";
+        document.querySelector("p").innerText =
+          "the periods may ruin a 69, but not our valentine!";
+
+        gif.style.display = "block";
+
+        if (!heartInterval) {
+          heartInterval = setInterval(createHeart, 260);
+        }
+      });
+
+      // NO button escape
+      noBtn.addEventListener("mouseenter", () => escapeNo(noBtn));
+      noBtn.addEventListener("touchstart", () => escapeNo(noBtn));
+      noBtn.addEventListener("click", (e) => e.preventDefault());
+    });
+
+    function escapeNo(btn) {
+      if (!noEscaped) {
+        btn.style.position = "fixed";
+        noEscaped = true;
+      }
+
+      btn.style.left = Math.random() * (window.innerWidth - 120) + "px";
+      btn.style.top = Math.random() * (window.innerHeight - 60) + "px";
+    }
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent =
+        ["💖","💗","💘","💞","💕"][Math.floor(Math.random() * 5)];
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 18 + 18 + "px";
+
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 4000);
+    }
+  </script>
+
+</body>
+</html>
